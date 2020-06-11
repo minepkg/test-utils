@@ -1,0 +1,18 @@
+manifestVersion = 0
+
+[package]
+  type = "mod"
+  name = "minepkg-lock-clock"
+  description = ""
+  platform = "fabric"
+  license = "MIT"
+
+[requirements]
+  minecraft = "1.15"
+  fabric = "*"
+
+[dependencies]
+  fabric = "*"
+
+[hooks]
+  build = "./gradlew build"
