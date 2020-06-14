@@ -2,7 +2,7 @@ manifestVersion = 0
 
 [package]
   type = "mod"
-  name = "minepkg-lock-clock"
+  name = "test-utils"
   description = ""
   platform = "fabric"
   license = "MIT"
