@@ -82,5 +82,13 @@ publishing {
 	repositories {
 		// uncomment to publish to the local maven
 		// mavenLocal()
+      maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/minepkg/test-utils")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+        }
+      }
 	}
 }

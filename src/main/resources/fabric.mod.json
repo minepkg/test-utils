@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "minepkg-testutils",
+  "id": "test-utils",
   "version": "${version}",
 
   "name": "test-utils",
