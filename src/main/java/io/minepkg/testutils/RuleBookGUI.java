@@ -174,11 +174,13 @@ public class RuleBookGUI extends LightweightGuiDescription {
     btnLockWeather.setToggle(!w.getGameRules().getBoolean(GameRules.DO_WEATHER_CYCLE));
 
     timeSlider.setValueChangeListener((time) -> {
+      // no tick updates while dragging (bit of a hack)
       this.preventTickUpdates = 1000;
       envBox.setTimeOfDay(time);
     });
     timeSlider.setDraggingFinishedListener((value)-> {
       setTime((long) value);
+      // skip 3 ticks after dragging
       preventTickUpdates = 3;
     });
 
@@ -211,13 +213,14 @@ public class RuleBookGUI extends LightweightGuiDescription {
   }
 
   private void setTime(long timeOfDay) {
-    preventTickUpdates += 1;
+    preventTickUpdates = 1000;
     PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
     passedData.writeLong(timeOfDay);
     // Send packet to server to change the time
     ClientSidePacketRegistry.INSTANCE.sendToServer(TestUtils.SET_TIME_PACKET_ID, passedData);
     timeSlider.setValue((int)timeOfDay, false);
     envBox.setTimeOfDay(timeOfDay);
+    preventTickUpdates = 3;
   }
 
   private void setRule(short id, boolean value) {
@@ -228,6 +231,7 @@ public class RuleBookGUI extends LightweightGuiDescription {
     // enabling the button locks the weather
     passedData.writeBoolean(value);
     ClientSidePacketRegistry.INSTANCE.sendToServer(TestUtils.SET_RULE_PACKET_ID, passedData);
+    preventTickUpdates = 3;
   }
 
   private void setWeather(short weather) {
@@ -235,5 +239,6 @@ public class RuleBookGUI extends LightweightGuiDescription {
     PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
     passedData.writeShort(weather);
     ClientSidePacketRegistry.INSTANCE.sendToServer(TestUtils.SET_WEATHER_PACKET_ID, passedData);
+    preventTickUpdates = 3;
   }
 }
