@@ -5,3 +5,8 @@ Features currently are:
 
 * lets you change time & weather
 * lets you lock the current time & weather
+
+
+## License
+
+The whole mod including all assets is licensed under [MIT](LICENSE).
