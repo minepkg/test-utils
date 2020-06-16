@@ -30,18 +30,19 @@ class WEnvMonitor extends WUsableClippedPanel {
   private static Identifier NORMAL_GRASS = new Identifier("minecraft:textures/block/grass_block_side.png");
 
   private boolean canSnow = false;
-  WSprite sun = new WSprite(new Identifier("testutils:sun.png"));
+  WSprite sun = new WSprite(new Identifier("testutils:sun_env.png"));
+  WSprite mun = new WSprite(new Identifier("testutils:mun_env.png"));
   WGradient bg = new WGradient();
   WTiledSprite grass = new WTiledSprite(NORMAL_GRASS, 12, 12);
   WTiledSprite rain = new WTiledSprite(new Identifier("minecraft:textures/environment/rain.png"), 42, 120);
   WTiledSprite snow = new WTiledSprite(new Identifier("minecraft:textures/environment/snow.png"), 42, 140);
   // WTiledSprite snowLayer = new WTiledSprite(new Identifier("minecraft:textures/block/snow.png"), 12, 4);
 
-  RGB startColorDay = new RGB(0xFF_8cb6fc);
-  RGB endColorDay = new RGB(0xFF_b5d1ff);
+  RGB topDayColor = new RGB(0xFF_8cb6fc);
+  RGB bottomDayColor = new RGB(0xFF_b5d1ff);
 
-  RGB startColorNight = new RGB(0xFF_00081a);
-  RGB endColorNight = new RGB(0xFF_000e2d);
+  RGB topNightColor = new RGB(0xFF_00081a);
+  RGB bottomNightColor = new RGB(0xFF_000e2d);
 
   WEnvMonitor() {
     setBackgroundPainter(BackgroundPainter.SLOT);
@@ -51,7 +52,8 @@ class WEnvMonitor extends WUsableClippedPanel {
     add(snow, 0, 0, 200, 35);
     add(rain, 0, 0, 200, 35);
 
-    add(sun, 0, 0, 6, 6);
+    add(sun, 0, 0, 10, 10);
+    add(mun, 0, 0, 10, 10);
     add(grass, 0, 23, 100, 12);
     // add(snowLayer, 0, 20, 100, 1);
   }
@@ -62,19 +64,24 @@ class WEnvMonitor extends WUsableClippedPanel {
     double realPercent = (double)time / (24000);
     double percent = ((double)time + offset) / (24000);
 
-    double x = Math.cos((realPercent + 0.5) * Math.PI * 2) * 41;
-    double y = Math.sin((realPercent + 0.5) * Math.PI * 2) * 20;
+    double sunPercent = realPercent > 0.6 ? realPercent : realPercent * 0.80;
 
-    sun.setLocation((int) x + 41, (int) y+ 22);
+    double x = Math.cos((sunPercent + 0.55) * Math.PI * 2) * 42;
+    double y = Math.sin((sunPercent + 0.55) * Math.PI * 2) * 21;
+    sun.setLocation((int) x + 41, (int) y+ 18);
+
+    double xMun = Math.cos((realPercent) * Math.PI * 2) * 41;
+    double yMun = Math.sin((realPercent) * Math.PI * 2) * 20;
+    mun.setLocation((int) xMun + 41, (int) yMun+ 22);
 
     if (percent <= 1) {
-      bg.colorFrom = WGradient.interpolateColors(startColorDay, startColorNight, percent);
-      bg.colorTo = WGradient.interpolateColors(endColorDay, endColorNight, percent);
+      bg.colorFrom = WGradient.interpolateColors(topDayColor, topNightColor, percent);
+      bg.colorTo = WGradient.interpolateColors(bottomDayColor, bottomNightColor, percent);
 
       grass.setTint(WGradient.interpolateColors(new RGB(0xFF_FFFFFF), new RGB(0xFF_222222), percent).toRgb());
     } else {
-      bg.colorFrom = WGradient.interpolateColors(endColorNight, startColorDay, (percent - 1) * 3);
-      bg.colorTo = WGradient.interpolateColors(endColorNight, new RGB(0xFF_ffde78), (percent - 1) * 3);
+      bg.colorFrom = WGradient.interpolateColors(bottomNightColor, topDayColor, (percent - 1) * 3);
+      bg.colorTo = WGradient.interpolateColors(bottomNightColor, new RGB(0xFF_ffde78), (percent - 1) * 3);
 
       grass.setTint(WGradient.interpolateColors(new RGB(0xFF_222222), new RGB(0xFF_FFFFFF), (percent - 1) * 3).toRgb());
     }
@@ -100,7 +107,6 @@ class WEnvMonitor extends WUsableClippedPanel {
   }
 
   public void setSnowBiome(boolean canSnow) {
-    System.out.println("IS SNOW: " + canSnow);
     this.canSnow = canSnow;
   }
 }
@@ -180,8 +186,6 @@ public class RuleBookGUI extends LightweightGuiDescription {
     });
     timeSlider.setDraggingFinishedListener((value)-> {
       setTime((long) value);
-      // skip 3 ticks after dragging
-      preventTickUpdates = 3;
     });
 
     // enabling the button locks the time
@@ -220,7 +224,8 @@ public class RuleBookGUI extends LightweightGuiDescription {
     ClientSidePacketRegistry.INSTANCE.sendToServer(TestUtils.SET_TIME_PACKET_ID, passedData);
     timeSlider.setValue((int)timeOfDay, false);
     envBox.setTimeOfDay(timeOfDay);
-    preventTickUpdates = 3;
+    // TODO: wait for response instead
+    preventTickUpdates = 20;
   }
 
   private void setRule(short id, boolean value) {
@@ -231,7 +236,7 @@ public class RuleBookGUI extends LightweightGuiDescription {
     // enabling the button locks the weather
     passedData.writeBoolean(value);
     ClientSidePacketRegistry.INSTANCE.sendToServer(TestUtils.SET_RULE_PACKET_ID, passedData);
-    preventTickUpdates = 3;
+    preventTickUpdates = 20;
   }
 
   private void setWeather(short weather) {
@@ -239,6 +244,6 @@ public class RuleBookGUI extends LightweightGuiDescription {
     PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
     passedData.writeShort(weather);
     ClientSidePacketRegistry.INSTANCE.sendToServer(TestUtils.SET_WEATHER_PACKET_ID, passedData);
-    preventTickUpdates = 3;
+    preventTickUpdates = 30;
   }
 }
