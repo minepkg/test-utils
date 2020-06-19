@@ -15,4 +15,4 @@ Features currently are:
 
 ## License
 
-The whole mod including all assets is licensed under [MIT](LICENSE).
+The whole mod is licensed under the [MIT License](LICENSE). This includes all assets.
