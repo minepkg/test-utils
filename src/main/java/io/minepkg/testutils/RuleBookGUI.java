@@ -38,8 +38,6 @@ class WRainy extends WTiledSprite {
     super(image, tileWidth, tileHeight);
   }
 
-  @Environment(EnvType.CLIENT)
-  @Overwrite
   public void paintFrame(int x, int y, Identifier frame) {
     ScreenDrawingTweak.texturedRect(
       x,
