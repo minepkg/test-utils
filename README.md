@@ -1,8 +1,8 @@
 # test-utils
 
-<center>
+<p align="center">
   <img height="420px" src="https://i.imgur.com/OUjKyvK.gif" alt="">
-</center>
+</p>
 
 ---
 
