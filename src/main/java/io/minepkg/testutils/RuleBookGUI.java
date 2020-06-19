@@ -1,5 +1,7 @@
 package io.minepkg.testutils;
 
+import org.spongepowered.asm.mixin.Overwrite;
+
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
@@ -9,12 +11,15 @@ import io.github.cottonmc.cotton.gui.widget.WToggleButton;
 import io.github.cottonmc.cotton.gui.widget.data.Alignment;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.Color.RGB;
+import io.minepkg.testutils.gui.ScreenDrawingTweak;
 import io.minepkg.testutils.gui.WClickableLabel;
 import io.minepkg.testutils.gui.WGradient;
 import io.minepkg.testutils.gui.WSpriteButton;
 import io.minepkg.testutils.gui.WTiledSprite;
 import io.minepkg.testutils.gui.WUsableClippedPanel;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
@@ -25,6 +30,32 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
+class WRainy extends WTiledSprite {
+  public float opacity = 1;
+  private int step = 0;
+
+  public WRainy(Identifier image, int tileWidth, int tileHeight) {
+    super(image, tileWidth, tileHeight);
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Overwrite
+  public void paintFrame(int x, int y, Identifier frame) {
+    ScreenDrawingTweak.texturedRect(
+      x,
+      y + (step / 13),
+      // but using the set tileWidth and tileHeight instead of the full height and width
+      tileWidth,
+      tileHeight,
+      // inherited texture from WSprite. only supports the first frame (no animated sprites)
+      frame,
+      tint,
+      opacity
+    );
+    // step = (step + 1) % (120 * 13);
+  }
+}
+
 class WEnvMonitor extends WUsableClippedPanel {
   private static Identifier SNOW_GRASS = new Identifier("minecraft:textures/block/grass_block_snow.png");
   private static Identifier NORMAL_GRASS = new Identifier("minecraft:textures/block/grass_block_side.png");
@@ -34,9 +65,8 @@ class WEnvMonitor extends WUsableClippedPanel {
   WSprite mun = new WSprite(new Identifier("testutils:mun_env.png"));
   WGradient bg = new WGradient();
   WTiledSprite grass = new WTiledSprite(NORMAL_GRASS, 12, 12);
-  WTiledSprite rain = new WTiledSprite(new Identifier("minecraft:textures/environment/rain.png"), 42, 120);
-  WTiledSprite snow = new WTiledSprite(new Identifier("minecraft:textures/environment/snow.png"), 42, 140);
-  // WTiledSprite snowLayer = new WTiledSprite(new Identifier("minecraft:textures/block/snow.png"), 12, 4);
+  WRainy rain = new WRainy(new Identifier("minecraft:textures/environment/rain.png"), 24, 120);
+  WRainy snow = new WRainy(new Identifier("minecraft:textures/environment/snow.png"), 24, 120);
 
   RGB topDayColor = new RGB(0xFF_8cb6fc);
   RGB bottomDayColor = new RGB(0xFF_b5d1ff);
@@ -49,8 +79,8 @@ class WEnvMonitor extends WUsableClippedPanel {
 
     add(bg, 0, 0, 200, 35);
 
-    add(snow, 0, 0, 200, 35);
-    add(rain, 0, 0, 200, 35);
+    add(snow, 0, 0, 240, 35);
+    add(rain, 0, 0, 240, 35);
 
     add(sun, 0, 0, 10, 10);
     add(mun, 0, 0, 10, 10);
@@ -108,6 +138,11 @@ class WEnvMonitor extends WUsableClippedPanel {
 
   public void setSnowBiome(boolean canSnow) {
     this.canSnow = canSnow;
+  }
+
+  public void setRainGradient(float gradient) {
+    this.snow.opacity = gradient;
+    this.rain.opacity = gradient;
   }
 }
 
@@ -200,6 +235,7 @@ public class RuleBookGUI extends LightweightGuiDescription {
   }
 
   public void tick() {
+    this.envBox.setRainGradient(world.getRainGradient(1.0F));
     // do not update stuff if currently dragging
     // this is a bit hacky, but tick timing can be hard
     if (this.preventTickUpdates > 0) {
