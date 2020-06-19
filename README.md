@@ -1,7 +1,7 @@
 # test-utils
 
 <center>
-  <img height="420px" src="https://i.imgur.com/fLITsIN.gif" alt="">
+  <img height="420px" src="https://i.imgur.com/OUjKyvK.gif" alt="">
 </center>
 
 ---
