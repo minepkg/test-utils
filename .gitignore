@@ -24,6 +24,7 @@ bin/
 .classpath
 .project
 
-# fabric
+# fabric & minepkg
 
 run/
+minecraft
