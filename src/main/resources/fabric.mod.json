@@ -9,8 +9,8 @@
     "Filip Weiss"
   ],
   "contact": {
-    "homepage": "https://minepkg.net/projects/clock-lock",
-    "sources": "https://github.com/minepkg/clock-lock"
+    "homepage": "https://minepkg.io/projects/test-utils",
+    "sources": "https://github.com/minepkg/test-utils"
   },
   "license": "MIT",
   "icon": "assets/testutils/textures/item/rulebook.png",
