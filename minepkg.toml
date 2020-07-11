@@ -3,7 +3,7 @@ manifestVersion = 0
 [package]
   type = "mod"
   name = "test-utils"
-  version = "0.0.1"
+  version = "0.0.2+1.15.2"
   description = "Makes mod testing easier. Currently lets you control time and weather without the fuzz."
   platform = "fabric"
   license = "MIT"
