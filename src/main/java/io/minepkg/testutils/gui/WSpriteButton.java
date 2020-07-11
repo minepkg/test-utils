@@ -2,6 +2,7 @@ package io.minepkg.testutils.gui;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.WButton;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class WSpriteButton extends WButton {
@@ -26,7 +27,7 @@ public class WSpriteButton extends WButton {
 	}
 
   @Override
-  public void paintBackground(int x, int y, int mouseX, int mouseY) {
+  public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
     boolean hovered = (mouseX>=0 && mouseY>=0 && mouseX<getWidth() && mouseY<getHeight());
     int state = 1; //1=regular. 2=hovered. 0=disabled.
     if (!isEnabled()) state = 0;

@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.2.7-SNAPSHOT'
+	id 'fabric-loom' version '0.4.30'
 	id 'maven-publish'
 }
 
@@ -25,8 +25,8 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modImplementation "io.github.cottonmc:LibGui:1.10.0+1.15.2"
-	include "io.github.cottonmc:LibGui:1.10.0+1.15.2"
+	modImplementation "io.github.cottonmc:LibGui:2.2.0+1.16.1"
+	include "io.github.cottonmc:LibGui:2.2.0+1.16.1"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
@@ -82,13 +82,5 @@ publishing {
 	repositories {
 		// uncomment to publish to the local maven
 		// mavenLocal()
-      maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/minepkg/test-utils")
-        credentials {
-            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-            password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
-        }
-      }
 	}
 }

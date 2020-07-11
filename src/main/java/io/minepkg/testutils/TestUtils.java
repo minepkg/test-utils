@@ -4,10 +4,10 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
 import net.minecraft.world.GameRules.BooleanRule;
 
 public class TestUtils implements ModInitializer {
@@ -42,44 +42,32 @@ public class TestUtils implements ModInitializer {
 
       // Execute on the main thread
       packetContext.getTaskQueue().execute(() -> {
-        World world = packetContext.getPlayer().world;
+        ServerWorld world = (ServerWorld) packetContext.getPlayer().world;
         // set the time
-        world.setTimeOfDay(wantedTime);
+        world.method_29199(wantedTime);
       });
     });
 
     // client wants to set the weather
     ServerSidePacketRegistry.INSTANCE.register(SET_WEATHER_PACKET_ID, (packetContext, attachedData) -> {
       short weather = attachedData.getShort(0);
-      World world = packetContext.getPlayer().world;
+      ServerWorld world = (ServerWorld) packetContext.getPlayer().world;
 
       // Execute on the main thread
       packetContext.getTaskQueue().execute(() -> {
 
         if (weather == WEATHER_CLEAR) {
-          world.getLevelProperties().setClearWeatherTime(120000);
-          world.getLevelProperties().setRainTime(0);
-          world.getLevelProperties().setThunderTime(0);
-          world.getLevelProperties().setRaining(false);
-          world.getLevelProperties().setThundering(false);
+          world.method_27910(120000, 0, false, false);
           return;
         }
 
         if (weather == WEATHER_RAIN) {
-          world.getLevelProperties().setClearWeatherTime(0);
-          world.getLevelProperties().setRainTime(24000);
-          world.getLevelProperties().setThunderTime(0);
-          world.getLevelProperties().setRaining(true);
-          world.getLevelProperties().setThundering(false);
+          world.method_27910(0, 24000, true, false);
           return;
         }
 
         if (weather == WEATHER_THUNDER) {
-          world.getLevelProperties().setClearWeatherTime(0);
-          world.getLevelProperties().setRainTime(24000);
-          world.getLevelProperties().setThunderTime(24000);
-          world.getLevelProperties().setRaining(true);
-          world.getLevelProperties().setThundering(true);
+          world.method_27910(0, 24000, true, true);
           return;
         }
       });
@@ -89,7 +77,7 @@ public class TestUtils implements ModInitializer {
     ServerSidePacketRegistry.INSTANCE.register(SET_RULE_PACKET_ID, (packetContext, attachedData) -> {
       short ruleID = attachedData.getShort(0);
       boolean value = attachedData.getBoolean(2);
-      World world = packetContext.getPlayer().world;
+      ServerWorld world = (ServerWorld) packetContext.getPlayer().world;
 
       // Execute on the main thread
       packetContext.getTaskQueue().execute(() -> {
