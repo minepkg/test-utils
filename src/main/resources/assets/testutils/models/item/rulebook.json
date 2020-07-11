@@ -1,7 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "minecraft:item/book",
-    "layer1": "testutils:item/rulebook"
+    "layer0": "testutils:item/rulebook"
   }
 }
