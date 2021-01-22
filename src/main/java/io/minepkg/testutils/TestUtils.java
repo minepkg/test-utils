@@ -1,7 +1,7 @@
 package io.minepkg.testutils;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.server.world.ServerWorld;
@@ -36,7 +36,7 @@ public class TestUtils implements ModInitializer {
     );
 
     // client wants to set the time
-    ServerSidePacketRegistry.INSTANCE.register(SET_TIME_PACKET_ID, (packetContext, attachedData) -> {
+    ServerSidePacketRegistryImpl.INSTANCE.register(SET_TIME_PACKET_ID, (packetContext, attachedData) -> {
       // make sure its not over 24000
       long wantedTime = attachedData.getLong(0) % 24000;
 
@@ -44,12 +44,12 @@ public class TestUtils implements ModInitializer {
       packetContext.getTaskQueue().execute(() -> {
         ServerWorld world = (ServerWorld) packetContext.getPlayer().world;
         // set the time
-        world.method_29199(wantedTime);
+        world.setTimeOfDay(wantedTime);
       });
     });
 
     // client wants to set the weather
-    ServerSidePacketRegistry.INSTANCE.register(SET_WEATHER_PACKET_ID, (packetContext, attachedData) -> {
+    ServerSidePacketRegistryImpl.INSTANCE.register(SET_WEATHER_PACKET_ID, (packetContext, attachedData) -> {
       short weather = attachedData.getShort(0);
       ServerWorld world = (ServerWorld) packetContext.getPlayer().world;
 
@@ -57,24 +57,24 @@ public class TestUtils implements ModInitializer {
       packetContext.getTaskQueue().execute(() -> {
 
         if (weather == WEATHER_CLEAR) {
-          world.method_27910(120000, 0, false, false);
+          world.setWeather(120000, 0, false, false);
           return;
         }
 
         if (weather == WEATHER_RAIN) {
-          world.method_27910(0, 24000, true, false);
+          world.setWeather(0, 24000, true, false);
           return;
         }
 
         if (weather == WEATHER_THUNDER) {
-          world.method_27910(0, 24000, true, true);
+          world.setWeather(0, 24000, true, true);
           return;
         }
       });
     });
 
     // client wants to set a rule (eg. freeze the time)
-    ServerSidePacketRegistry.INSTANCE.register(SET_RULE_PACKET_ID, (packetContext, attachedData) -> {
+    ServerSidePacketRegistryImpl.INSTANCE.register(SET_RULE_PACKET_ID, (packetContext, attachedData) -> {
       short ruleID = attachedData.getShort(0);
       boolean value = attachedData.getBoolean(2);
       ServerWorld world = (ServerWorld) packetContext.getPlayer().world;
