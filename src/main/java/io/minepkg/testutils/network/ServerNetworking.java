@@ -6,7 +6,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class ServerNetworking {
+public final class ServerNetworking {
 
   public static final Identifier WEATHER_GAMERULE_SYNC = new Identifier("test-utils", "weather_sync");
 
