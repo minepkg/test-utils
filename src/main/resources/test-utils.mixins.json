@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "io.minepkg.testutils.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "BooleanRuleAccessor",
+    "GameRulesAccessor",
+    "GameRulesMixin",
+    "RuleAccessor"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
