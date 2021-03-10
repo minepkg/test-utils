@@ -26,8 +26,5 @@
   },
   "suggests": {
     "minepkg-companion": "*"
-  },
-  "mixins": [
-    "test-utils.mixins.json"
-  ]
+  }
 }
