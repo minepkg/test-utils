@@ -2,11 +2,13 @@ package io.minepkg.testutils;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -41,6 +43,11 @@ public class TestUtils implements ModInitializer {
       new Identifier("testutils", "rulebook"),
       new RuleBookItem(new Item.Settings().group(ItemGroup.TOOLS).maxCount(1))
     );
+
+    // sync weather rule on player connect
+    ServerPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+      sendWeatherRule(handler.player);
+    });
 
     ServerPlayNetworking.registerGlobalReceiver(WEATHER_GAMERULE_SYNC_REQUEST, (server, player, handler, buf, sender) -> {
       sendWeatherRule(player);
@@ -101,12 +108,11 @@ public class TestUtils implements ModInitializer {
           case DO_DAYLIGHT_CYCLE_RULE:
             rule = rules.get(GameRules.DO_DAYLIGHT_CYCLE);
             rule.set(value, world.getServer());
-            sendWeatherRule(player);
             break;
           case DO_WEATHER_CYCLE_RULE:
             rule = rules.get(GameRules.DO_WEATHER_CYCLE);
             rule.set(value, world.getServer());
-            sendWeatherRule(player);
+            broadcastWeatherRuleChange(server, value);
             break;
           default:
             System.err.printf(
@@ -116,6 +122,16 @@ public class TestUtils implements ModInitializer {
             );
           }
       });
+    });
+  }
+
+  public void broadcastWeatherRuleChange(MinecraftServer server, boolean value) {
+    PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+    packet.writeBoolean(value);
+
+    // Notify each player on the server about the weather gamerule update.
+    server.getPlayerManager().getPlayerList().forEach(player -> {
+      ServerPlayNetworking.send(player, WEATHER_GAMERULE_SYNC, packet);
     });
   }
 
