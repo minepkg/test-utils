@@ -2,12 +2,8 @@ package io.minepkg.testutils;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
-import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
-import io.github.cottonmc.cotton.gui.widget.WSlider;
-import io.github.cottonmc.cotton.gui.widget.WSprite;
-import io.github.cottonmc.cotton.gui.widget.WTiledSprite;
-import io.github.cottonmc.cotton.gui.widget.WToggleButton;
 import io.github.cottonmc.cotton.gui.widget.WAbstractSlider.Direction;
+import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.Color.RGB;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
@@ -185,7 +181,7 @@ public class RuleBookGUI extends LightweightGuiDescription {
     envBox.setTimeOfDay(timeOfDay);
 
     btnLockTime.setToggle(!w.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE));
-    btnLockWeather.setToggle(!w.getGameRules().getBoolean(GameRules.DO_WEATHER_CYCLE));
+    btnLockWeather.setToggle(!TestUtilsClient.doWeatherCycle);
 
     timeSlider.setValueChangeListener((time) -> {
       // no tick updates while dragging (bit of a hack)
@@ -222,7 +218,7 @@ public class RuleBookGUI extends LightweightGuiDescription {
 
     // update if someone else changed the game rules
     btnLockTime.setToggle(!world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE));
-    btnLockWeather.setToggle(!world.getGameRules().getBoolean(GameRules.DO_WEATHER_CYCLE));
+    btnLockWeather.setToggle(!TestUtilsClient.doWeatherCycle);
   }
 
   private void setTime(long timeOfDay) {

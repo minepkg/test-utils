@@ -16,7 +16,8 @@
   "icon": "assets/testutils/textures/item/rulebook.png",
   "environment": "*",
   "entrypoints": {
-    "main": [ "io.minepkg.testutils.TestUtils"]
+    "main": [ "io.minepkg.testutils.TestUtils"],
+    "client": [ "io.minepkg.testutils.TestUtilsClient"]
   },
   "depends": {
     "fabricloader": ">=0.7.4",
