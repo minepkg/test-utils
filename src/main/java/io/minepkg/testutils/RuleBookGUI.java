@@ -12,7 +12,7 @@ import io.minepkg.testutils.gui.WGradient;
 import io.minepkg.testutils.gui.WSpriteButton;
 import io.minepkg.testutils.gui.WUsableClippedPanel;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.LiteralText;
@@ -226,7 +226,7 @@ public class RuleBookGUI extends LightweightGuiDescription {
     PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
     passedData.writeLong(timeOfDay);
     // Send packet to server to change the time
-    ClientSidePacketRegistry.INSTANCE.sendToServer(TestUtils.SET_TIME_PACKET_ID, passedData);
+    ClientPlayNetworking.send(TestUtils.SET_TIME_PACKET_ID, passedData);
     timeSlider.setValue((int)timeOfDay, false);
     envBox.setTimeOfDay(timeOfDay);
     // TODO: wait for response instead
@@ -240,7 +240,7 @@ public class RuleBookGUI extends LightweightGuiDescription {
     passedData.writeShort(id);
     // enabling the button locks the weather
     passedData.writeBoolean(value);
-    ClientSidePacketRegistry.INSTANCE.sendToServer(TestUtils.SET_RULE_PACKET_ID, passedData);
+    ClientPlayNetworking.send(TestUtils.SET_RULE_PACKET_ID, passedData);
     preventTickUpdates = 20;
   }
 
@@ -248,7 +248,7 @@ public class RuleBookGUI extends LightweightGuiDescription {
     preventTickUpdates += 1;
     PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
     passedData.writeShort(weather);
-    ClientSidePacketRegistry.INSTANCE.sendToServer(TestUtils.SET_WEATHER_PACKET_ID, passedData);
+    ClientPlayNetworking.send(TestUtils.SET_WEATHER_PACKET_ID, passedData);
     preventTickUpdates = 30;
   }
 }

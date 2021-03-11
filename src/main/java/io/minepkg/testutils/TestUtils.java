@@ -54,25 +54,25 @@ public class TestUtils implements ModInitializer {
     });
 
     // client wants to set the time
-    ServerSidePacketRegistryImpl.INSTANCE.register(SET_TIME_PACKET_ID, (packetContext, attachedData) -> {
+    ServerPlayNetworking.registerGlobalReceiver(SET_TIME_PACKET_ID, (server, player, handler, buf, responseSender) -> {
       // make sure its not over 24000
-      long wantedTime = attachedData.getLong(0) % 24000;
+      long wantedTime = buf.getLong(0) % 24000;
 
       // Execute on the main thread
-      packetContext.getTaskQueue().execute(() -> {
-        ServerWorld world = (ServerWorld) packetContext.getPlayer().world;
+      server.execute(() -> {
+        ServerWorld world = (ServerWorld) player.world;
         // set the time
         world.setTimeOfDay(wantedTime);
       });
     });
 
     // client wants to set the weather
-    ServerSidePacketRegistryImpl.INSTANCE.register(SET_WEATHER_PACKET_ID, (packetContext, attachedData) -> {
-      short weather = attachedData.getShort(0);
-      ServerWorld world = (ServerWorld) packetContext.getPlayer().world;
+    ServerPlayNetworking.registerGlobalReceiver(SET_WEATHER_PACKET_ID, (server, player, handler, buf, responseSender) -> {
+      short weather = buf.getShort(0);
+      ServerWorld world = (ServerWorld) player.world;
 
       // Execute on the main thread
-      packetContext.getTaskQueue().execute(() -> {
+      server.execute(() -> {
 
         if (weather == WEATHER_CLEAR) {
           world.setWeather(120000, 0, false, false);
