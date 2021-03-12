@@ -3,17 +3,17 @@ manifestVersion = 0
 [package]
   type = "mod"
   name = "test-utils"
-  version = "0.0.4+1.16.1"
+  version = "0.0.5"
   description = "Makes mod testing easier. Currently lets you control time and weather without the fuzz."
   platform = "fabric"
   license = "MIT"
 
 [requirements]
-  minecraft = "~1.16.1"
+  minecraft = "~1.16.2"
   fabric = "*"
 
 [dependencies]
   fabric = "*"
 
-[hooks]
+[dev]
   build = "./gradlew build"
