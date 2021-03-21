@@ -16,4 +16,4 @@ manifestVersion = 0
   fabric = "*"
 
 [dev]
-  build = "./gradlew build"
+  buildCommand = "./gradlew build"
