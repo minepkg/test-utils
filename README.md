@@ -6,7 +6,7 @@
 
 ---
 
-This is a mod that helps you test other mods without distractions. It can also help while building creativly.
+This is a mod that helps you test other mods without distractions. It can also help while building creatively.
 Features currently are:
 
 * lets you change time & weather
