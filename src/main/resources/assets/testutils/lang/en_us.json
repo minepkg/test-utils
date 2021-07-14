@@ -1,3 +1,7 @@
 {
-  "item.testutils.rulebook": "Rulebook"
+  "item.testutils.rulebook": "Rulebook",
+  "text.testutils.freeze_time": "freeze time",
+  "text.testutils.lock_weather": "lock weather",
+  "text.testutils.day": "Day",
+  "text.testutils.night": "Night"
 }

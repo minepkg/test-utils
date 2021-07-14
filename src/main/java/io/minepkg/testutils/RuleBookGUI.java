@@ -7,6 +7,7 @@ import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.Color.RGB;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import io.minepkg.testutils.gui.WClickableLabel;
 import io.minepkg.testutils.gui.WGradient;
 import io.minepkg.testutils.gui.WSpriteButton;
@@ -15,7 +16,7 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
@@ -23,12 +24,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
 class WEnvMonitor extends WUsableClippedPanel {
-  private static Identifier SNOW_GRASS = new Identifier("minecraft:textures/block/grass_block_snow.png");
-  private static Identifier NORMAL_GRASS = new Identifier("minecraft:textures/block/grass_block_side.png");
+  private static final Identifier SNOW_GRASS = new Identifier("minecraft:textures/block/grass_block_snow.png");
+  private static final Identifier NORMAL_GRASS = new Identifier("minecraft:textures/block/grass_block_side.png");
 
   private boolean canSnow = false;
-  WSprite sun = new WSprite(new Identifier("testutils:sun_env.png"));
-  WSprite mun = new WSprite(new Identifier("testutils:mun_env.png"));
+  WSprite sun = new WSprite(TestUtils.id("sun_env.png"));
+  WSprite mun = new WSprite(TestUtils.id("mun_env.png"));
   WGradient bg = new WGradient();
   WTiledSprite grass = new WTiledSprite(12, 12, NORMAL_GRASS);
   WTiledSprite rain = new WTiledSprite(24, 120, new Identifier("minecraft:textures/environment/rain.png"));
@@ -121,11 +122,11 @@ public class RuleBookGUI extends LightweightGuiDescription {
   WSlider timeSlider = new WSlider(0, 23999, Axis.HORIZONTAL);
   WEnvMonitor envBox = new WEnvMonitor();
 
-  WToggleButton btnLockTime = new WToggleButton(new LiteralText("freeze time"));
-  WToggleButton btnLockWeather = new WToggleButton(new LiteralText("lock weather"));
+  WToggleButton btnLockTime = new WToggleButton(new TranslatableText("text.testutils.freeze_time"));
+  WToggleButton btnLockWeather = new WToggleButton(new TranslatableText("text.testutils.lock_weather"));
 
-  WClickableLabel sliderDayLabel = new WClickableLabel("Day");
-  WClickableLabel sliderNightLabel = new WClickableLabel("Night");
+  WClickableLabel sliderDayLabel = new WClickableLabel(new TranslatableText("text.testutils.day"));
+  WClickableLabel sliderNightLabel = new WClickableLabel(new TranslatableText("text.testutils.night"));
 
   public RuleBookGUI(World w, PlayerEntity player) {
     this.timeOfDay = w.getTimeOfDay();
@@ -135,9 +136,9 @@ public class RuleBookGUI extends LightweightGuiDescription {
     timeSlider.setDirection(Direction.RIGHT);
 
     BlockPos playerPos = player.getBlockPos();
-    Biome bio = w.getBiome(player.getBlockPos());
+    Biome biome = w.getBiome(player.getBlockPos());
 
-    if (bio.getTemperature(playerPos) >= 0.15F) {
+    if (biome.getTemperature(playerPos) >= 0.15F) {
       this.envBox.setSnowBiome(false);
     } else {
       this.envBox.setSnowBiome(playerPos.getY() >= 0 && playerPos.getY() < 256);
@@ -146,6 +147,7 @@ public class RuleBookGUI extends LightweightGuiDescription {
 
     setRootPanel(root);
     root.setSize(100, 100);
+    root.setInsets(Insets.ROOT_PANEL);
 
     sliderDayLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
     sliderNightLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
@@ -153,9 +155,9 @@ public class RuleBookGUI extends LightweightGuiDescription {
     sliderDayLabel.setOnClick(() -> setTime(5500));
     sliderNightLabel.setOnClick(() -> setTime(18500));
 
-    WSpriteButton btnWeatherClear = new WSpriteButton(new Identifier("testutils:sun.png"));
-    WSpriteButton btnWeatherRain = new WSpriteButton(new Identifier("testutils:rain.png"));
-    WSpriteButton btnWeatherThunder = new WSpriteButton(new Identifier("testutils:thunder.png"));
+    WSpriteButton btnWeatherClear = new WSpriteButton(TestUtils.id("sun.png"));
+    WSpriteButton btnWeatherRain = new WSpriteButton(TestUtils.id("rain.png"));
+    WSpriteButton btnWeatherThunder = new WSpriteButton(TestUtils.id("thunder.png"));
 
     btnWeatherClear.setOnClick(() -> setWeather(TestUtils.WEATHER_CLEAR));
     btnWeatherRain.setOnClick(() -> setWeather(TestUtils.WEATHER_RAIN));
@@ -188,9 +190,7 @@ public class RuleBookGUI extends LightweightGuiDescription {
       this.preventTickUpdates = 1000;
       envBox.setTimeOfDay(time);
     });
-    timeSlider.setDraggingFinishedListener((value)-> {
-      setTime((long) value);
-    });
+    timeSlider.setDraggingFinishedListener(this::setTime);
 
     // enabling the button locks the time
     btnLockTime.setOnToggle((toggled) -> setRule(TestUtils.DO_DAYLIGHT_CYCLE_RULE, !toggled));

@@ -15,15 +15,19 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.BooleanRule;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TestUtils implements ModInitializer {
+  public static final String MOD_ID = "testutils"; // Note: currently different from fabric.mod.json id
+  public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-  public static final Identifier WEATHER_GAMERULE_SYNC = new Identifier("test-utils", "weather_sync");
-  public static final Identifier WEATHER_GAMERULE_SYNC_REQUEST = new Identifier("test-utils", "weather_sync_request");
+  public static final Identifier WEATHER_GAMERULE_SYNC = TestUtils.id("weather_sync");
+  public static final Identifier WEATHER_GAMERULE_SYNC_REQUEST = TestUtils.id("weather_sync_request");
 
-  public static final Identifier SET_TIME_PACKET_ID = new Identifier("testutils", "set_time");
-  public static final Identifier SET_RULE_PACKET_ID = new Identifier("testutils", "set_rule");
-  public static final Identifier SET_WEATHER_PACKET_ID = new Identifier("testutils", "set_weather");
+  public static final Identifier SET_TIME_PACKET_ID = TestUtils.id("set_time");
+  public static final Identifier SET_RULE_PACKET_ID = TestUtils.id("set_rule");
+  public static final Identifier SET_WEATHER_PACKET_ID = TestUtils.id("set_weather");
 
   public static final short DO_DAYLIGHT_CYCLE_RULE = 1;
   public static final short DO_WEATHER_CYCLE_RULE = 2;
@@ -31,6 +35,10 @@ public class TestUtils implements ModInitializer {
   public static final short WEATHER_CLEAR = 1;
   public static final short WEATHER_RAIN = 2;
   public static final short WEATHER_THUNDER = 3;
+
+  public static Identifier id(String path) {
+    return new Identifier(MOD_ID, path);
+  }
 
   @Override
   public void onInitialize() {
@@ -40,7 +48,7 @@ public class TestUtils implements ModInitializer {
 
     Registry.register(
       Registry.ITEM,
-      new Identifier("testutils", "rulebook"),
+      TestUtils.id("rulebook"),
       new RuleBookItem(new Item.Settings().group(ItemGroup.TOOLS).maxCount(1))
     );
 
@@ -73,20 +81,10 @@ public class TestUtils implements ModInitializer {
 
       // Execute on the main thread
       server.execute(() -> {
-
-        if (weather == WEATHER_CLEAR) {
-          world.setWeather(120000, 0, false, false);
-          return;
-        }
-
-        if (weather == WEATHER_RAIN) {
-          world.setWeather(0, 24000, true, false);
-          return;
-        }
-
-        if (weather == WEATHER_THUNDER) {
-          world.setWeather(0, 24000, true, true);
-          return;
+        switch (weather) {
+          case WEATHER_CLEAR   -> world.setWeather(120000, 0, false, false);
+          case WEATHER_RAIN    -> world.setWeather(0, 24000, true, false);
+          case WEATHER_THUNDER -> world.setWeather(0, 24000, true, true);
         }
       });
     });
@@ -101,26 +99,25 @@ public class TestUtils implements ModInitializer {
       server.execute(() -> {
 
         GameRules rules = world.getGameRules();
-        BooleanRule rule;
 
         switch(ruleID) {
           // daylight cycle
-          case DO_DAYLIGHT_CYCLE_RULE:
-            rule = rules.get(GameRules.DO_DAYLIGHT_CYCLE);
+          case DO_DAYLIGHT_CYCLE_RULE -> {
+            BooleanRule rule = rules.get(GameRules.DO_DAYLIGHT_CYCLE);
             rule.set(value, world.getServer());
-            break;
-          case DO_WEATHER_CYCLE_RULE:
-            rule = rules.get(GameRules.DO_WEATHER_CYCLE);
+          }
+          case DO_WEATHER_CYCLE_RULE -> {
+            BooleanRule rule = rules.get(GameRules.DO_WEATHER_CYCLE);
             rule.set(value, world.getServer());
             broadcastWeatherRuleChange(server, value);
-            break;
-          default:
-            System.err.printf(
-              "Player %s requested to change an unsupported rule id (%d). (client might be outdated)",
+          }
+          default ->
+            LOGGER.error(
+              "Player {} requested to change an unsupported rule id ({}). (client might be outdated)",
               player.getName().asString(),
               ruleID
             );
-          }
+        }
       });
     });
   }
