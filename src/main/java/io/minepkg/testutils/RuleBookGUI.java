@@ -8,10 +8,7 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.Color.RGB;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
-import io.minepkg.testutils.gui.WClickableLabel;
-import io.minepkg.testutils.gui.WGradient;
-import io.minepkg.testutils.gui.WSpriteButton;
-import io.minepkg.testutils.gui.WUsableClippedPanel;
+import io.minepkg.testutils.gui.*;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,8 +25,8 @@ class WEnvMonitor extends WUsableClippedPanel {
   private static final Identifier NORMAL_GRASS = new Identifier("minecraft:textures/block/grass_block_side.png");
 
   private boolean canSnow = false;
-  WSprite sun = new WSprite(TestUtils.id("sun_env.png"));
-  WSprite mun = new WSprite(TestUtils.id("mun_env.png"));
+  WSprite sun = new WSpriteFixed(TestUtils.id("sun_env.png"));
+  WSprite mun = new WSpriteFixed(TestUtils.id("mun_env.png"));
   WGradient bg = new WGradient();
   WTiledSprite grass = new WTiledSprite(12, 12, NORMAL_GRASS);
   WTiledSprite rain = new WTiledSprite(24, 120, new Identifier("minecraft:textures/environment/rain.png"));
