@@ -18,7 +18,7 @@ public class WGradient extends WWidget {
 
   @Override
   public boolean canResize() {
-      return true; // set to false if you want a static size
+    return true; // set to false if you want a static size
   }
 
   @Environment(EnvType.CLIENT)
@@ -27,7 +27,7 @@ public class WGradient extends WWidget {
     for (int yPos = 0; yPos < getHeight(); yPos++) {
       double percent = yPos / (double)getHeight();
       RGB color = WGradient.interpolateColors(colorFrom, colorTo, percent);
-      ScreenDrawing.coloredRect(x, y+yPos, getWidth(), 1, color.toRgb());
+      ScreenDrawing.coloredRect(matrices, x, y+yPos, getWidth(), 1, color.toRgb());
     }
   }
 
