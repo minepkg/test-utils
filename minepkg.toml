@@ -10,7 +10,7 @@ manifestVersion = 0
   source = "https://github.com/minepkg/test-utils"
 
 [requirements]
-  minecraft = "~1.16.2"
+  minecraft = "~1.17.0"
   fabric = "*"
 
 [dependencies]
