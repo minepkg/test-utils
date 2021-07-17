@@ -1,14 +1,17 @@
+
+# Preview of the minepkg.toml format! Could break anytime!
 manifestVersion = 0
 
 [package]
   type = "mod"
   name = "test-utils"
   description = "Makes mod testing easier. Currently lets you control time and weather without the fuzz."
-  version = "0.1.1"
+  version = "0.2.0"
   platform = "fabric"
   license = "MIT"
   source = "https://github.com/minepkg/test-utils"
 
+# These are global requirements
 [requirements]
   minecraft = "~1.17.0"
   fabric = "*"
