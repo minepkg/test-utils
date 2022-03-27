@@ -23,7 +23,7 @@ public class RuleBookItem extends Item {
   public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
     if (world.isClient) {
       playerEntity.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, 1.0F, 1.0F);
-      MinecraftClient.getInstance().openScreen(new RuleBookScreen(new RuleBookGUI(world, playerEntity)));
+      MinecraftClient.getInstance().setScreen(new RuleBookScreen(new RuleBookGUI(world, playerEntity)));
     }
     return new TypedActionResult<>(ActionResult.SUCCESS, playerEntity.getStackInHand(hand));
   }
