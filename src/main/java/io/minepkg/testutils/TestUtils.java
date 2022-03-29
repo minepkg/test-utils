@@ -93,7 +93,7 @@ public class TestUtils implements ModInitializer {
     ServerPlayNetworking.registerGlobalReceiver(SET_RULE_PACKET_ID, (server, player, handler, buf, sender) -> {
       short ruleID = buf.getShort(0);
       boolean value = buf.getBoolean(2);
-      ServerWorld world = player.getServerWorld();
+      ServerWorld world = (ServerWorld) player.world;
 
       // Execute on the main thread
       server.execute(() -> {
@@ -133,7 +133,8 @@ public class TestUtils implements ModInitializer {
   }
 
   public void sendWeatherRule(ServerPlayerEntity player) {
-    boolean doWeatherCycle = player.getServerWorld().getGameRules().getBoolean(GameRules.DO_WEATHER_CYCLE);
+    ServerWorld world = (ServerWorld)player.world;
+    boolean doWeatherCycle = world.getGameRules().getBoolean(GameRules.DO_WEATHER_CYCLE);
     PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
     packet.writeBoolean(doWeatherCycle);
     ServerPlayNetworking.send(player, WEATHER_GAMERULE_SYNC, packet);

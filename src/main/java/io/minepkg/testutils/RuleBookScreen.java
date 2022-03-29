@@ -16,9 +16,8 @@ public class RuleBookScreen extends CottonClientScreen {
     return false;
   }
 
-  public boolean isPauseScreen() {
-    return false;
-  }
+  @Override
+  public boolean shouldPause() { return false; }
 
   @Override
   public void tick() {
