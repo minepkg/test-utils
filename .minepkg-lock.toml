@@ -4,19 +4,19 @@
 lockfileVersion = 1
 
 [fabric]
-  minecraft = "1.18.2"
+  minecraft = "1.18"
   fabricLoader = "0.13.3"
-  mapping = "1.18.2+build.2"
+  mapping = "1.18+build.1"
 
 [dependencies]
 
   [dependencies.fabric]
     name = "fabric"
-    version = "0.48.0+1.18.mpkg.1"
+    version = "0.46.1+1.18.mpkg.1"
     type = "mod"
-    ipfsHash = "QmUkvWXqHpWfxfAaDqJyWssJ8rRtfHwSKor7YQivEyYQ4W"
-    Sha256 = "3f4c6789b85ba225965752a33587e6e75a331dc34eac12a164b622ec6a7b60bc"
-    url = "https://api.preview.minepkg.io/v1/releases/fabric/fabric@0.48.0+1.18.mpkg.1/download"
+    ipfsHash = ""
+    Sha256 = "6dd208e5fdb197e7effd68f8338e4092dc079a38ac945fd3bae9408ad4f11de6"
+    url = "https://api.preview.minepkg.io/v1/releases/fabric/fabric@0.46.1+1.18.mpkg.1/download"
     provider = "minepkg"
     dependend = ""
 

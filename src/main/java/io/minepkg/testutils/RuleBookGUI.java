@@ -16,7 +16,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -134,9 +133,9 @@ public class RuleBookGUI extends LightweightGuiDescription {
     timeSlider.setDirection(Direction.RIGHT);
 
     BlockPos playerPos = player.getBlockPos();
-    RegistryEntry<Biome> biome = w.getBiome(player.getBlockPos());
+    Biome biome = w.getBiome(player.getBlockPos());
 
-    if (biome.value().getTemperature() >= 0.15F) {
+    if (biome.getTemperature() >= 0.15F) {
       this.envBox.setSnowBiome(false);
     } else {
       this.envBox.setSnowBiome(playerPos.getY() >= 0 && playerPos.getY() < 256);
