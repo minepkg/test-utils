@@ -42,5 +42,5 @@ jobs:
         rm -f ~/.gradle/caches/modules-2/gc.properties
     - name: crash test
       uses: minepkg/action-crash-test@v0
-        with:
-          no-build: true
+      with:
+        no-build: true
