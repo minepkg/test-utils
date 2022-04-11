@@ -40,11 +40,7 @@ jobs:
       run: |
         rm -f ~/.gradle/caches/modules-2/modules-2.lock
         rm -f ~/.gradle/caches/modules-2/gc.properties
-  crash-test:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: minepkg/action-crash-test@v0
+    - name: crash test
+      uses: minepkg/action-crash-test@v0
         with:
           no-build: true
