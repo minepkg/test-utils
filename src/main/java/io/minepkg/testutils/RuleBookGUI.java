@@ -26,8 +26,8 @@ class WEnvMonitor extends WUsableClippedPanel {
   private static final Identifier NORMAL_GRASS = new Identifier("minecraft:textures/block/grass_block_side.png");
 
   private boolean canSnow = false;
-  WSprite sun = new WSpriteFixed(TestUtils.id("sun_env.png"));
-  WSprite mun = new WSpriteFixed(TestUtils.id("mun_env.png"));
+  WSprite sun = new WSprite(TestUtils.id("sun_env.png"));
+  WSprite mun = new WSprite(TestUtils.id("mun_env.png"));
   WGradient bg = new WGradient();
   WTiledSprite grass = new WTiledSprite(12, 12, NORMAL_GRASS);
   WTiledSprite rain = new WTiledSprite(24, 120, new Identifier("minecraft:textures/environment/rain.png"));
