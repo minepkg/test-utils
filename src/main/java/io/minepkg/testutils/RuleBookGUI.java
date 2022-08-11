@@ -13,7 +13,8 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.RegistryEntry;
@@ -120,11 +121,11 @@ public class RuleBookGUI extends LightweightGuiDescription {
   WSlider timeSlider = new WSlider(0, 23999, Axis.HORIZONTAL);
   WEnvMonitor envBox = new WEnvMonitor();
 
-  WToggleButton btnLockTime = new WToggleButton(new TranslatableText("text.testutils.freeze_time"));
-  WToggleButton btnLockWeather = new WToggleButton(new TranslatableText("text.testutils.lock_weather"));
+  WToggleButton btnLockTime = new WToggleButton(Text.translatable("text.testutils.freeze_time"));
+  WToggleButton btnLockWeather = new WToggleButton(Text.translatable("text.testutils.lock_weather"));
 
-  WClickableLabel sliderDayLabel = new WClickableLabel(new TranslatableText("text.testutils.day"));
-  WClickableLabel sliderNightLabel = new WClickableLabel(new TranslatableText("text.testutils.night"));
+  WClickableLabel sliderDayLabel = new WClickableLabel(Text.translatable("text.testutils.day"));
+  WClickableLabel sliderNightLabel = new WClickableLabel(Text.translatable("text.testutils.night"));
 
   public RuleBookGUI(World w, PlayerEntity player) {
     this.timeOfDay = w.getTimeOfDay();
