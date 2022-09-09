@@ -4,7 +4,6 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.network.PacketByteBuf;
@@ -114,7 +113,7 @@ public class TestUtils implements ModInitializer {
           default ->
             LOGGER.error(
               "Player {} requested to change an unsupported rule id ({}). (client might be outdated)",
-              player.getName().asString(),
+              player.getName().getString(),
               ruleID
             );
         }
