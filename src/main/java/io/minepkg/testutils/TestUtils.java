@@ -2,16 +2,18 @@ package io.minepkg.testutils;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.BooleanRule;
 import org.apache.logging.log4j.LogManager;
@@ -44,11 +46,13 @@ public class TestUtils implements ModInitializer {
     // This code runs as soon as Minecraft is in a mod-load-ready state.
     // However, some things (like resources) may still be uninitialized.
     // Proceed with mild caution.
+    RuleBookItem TestUtils_Item = new RuleBookItem(new Item.Settings().maxCount(1));
+    ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> entries.add(TestUtils_Item));
 
     Registry.register(
-      Registry.ITEM,
+      Registries.ITEM,
       TestUtils.id("rulebook"),
-      new RuleBookItem(new Item.Settings().group(ItemGroup.TOOLS).maxCount(1))
+      TestUtils_Item
     );
 
     // sync weather rule on player connect
