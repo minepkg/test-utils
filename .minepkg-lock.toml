@@ -4,28 +4,30 @@
 lockfileVersion = 1
 
 [fabric]
-  minecraft = "1.18.2"
-  fabricLoader = "0.13.3"
-  mapping = "1.18.2+build.2"
+  minecraft = "1.19.4"
+  fabricLoader = "0.14.18"
+  mapping = "1.19.4+build.1"
 
 [dependencies]
 
   [dependencies.fabric]
     name = "fabric"
-    version = "0.48.0+1.18.mpkg.1"
+    version = "0.76.0+1.19.4.mpkg.1"
+    versionName = ""
     type = "mod"
-    ipfsHash = "QmUkvWXqHpWfxfAaDqJyWssJ8rRtfHwSKor7YQivEyYQ4W"
-    Sha256 = "3f4c6789b85ba225965752a33587e6e75a331dc34eac12a164b622ec6a7b60bc"
-    url = "https://api.preview.minepkg.io/v1/releases/fabric/fabric@0.48.0+1.18.mpkg.1/download"
+    ipfsHash = "QmPkXR4psTFUZXWTKFhcZsZtjE1BGpB99uS3yad1zHkLMq"
+    Sha256 = "63f4afaebc91dfaa40102294b24309397c18c4c2f824920613f435d23b3b04c0"
+    url = "https://api.preview.minepkg.io/v1/releases/fabric/fabric@0.76.0+1.19.4.mpkg.1/download"
     provider = "minepkg"
-    dependend = ""
+    dependent = ""
 
   [dependencies.minepkg-companion]
     name = "minepkg-companion"
-    version = "0.5.0"
+    version = "0.7.0"
+    versionName = ""
     type = "mod"
-    ipfsHash = ""
-    Sha256 = "b7679213fc661c3acddd18759c1e243d8b70170c9f635d6d55c1ec6b1e23d00f"
-    url = "https://api.preview.minepkg.io/v1/releases/fabric/minepkg-companion@0.5.0/download"
+    ipfsHash = "QmeEMaQt17m6u1ynFMKqVxa6tBx7wyHtHPrQn3g8DQ2Yww"
+    Sha256 = "e81e923c709140cdfc6f4532c9574abfedc771ca8979e71f5fa90fafc0a4d1ee"
+    url = "https://api.preview.minepkg.io/v1/releases/fabric/minepkg-companion@0.7.0/download"
     provider = "minepkg"
-    dependend = ""
+    dependent = ""
