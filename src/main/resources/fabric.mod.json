@@ -1,31 +1,29 @@
 {
-  "schemaVersion": 1,
-  "id": "test-utils",
-  "version": "${version}",
+	"schemaVersion": 1,
+	"id": "test-utils",
+	"version": "${version}",
 
-  "name": "test-utils",
-  "description": "Makes mod testing easier. Currently lets you control time and weather without the fuzz.",
-  "authors": [
-    "Filip Weiss"
-  ],
-  "contact": {
-    "homepage": "https://minepkg.io/projects/test-utils",
-    "sources": "https://github.com/minepkg/test-utils"
-  },
-  "license": "MIT",
-  "icon": "assets/testutils/textures/item/rulebook.png",
-  "environment": "*",
-  "entrypoints": {
-    "main": [ "io.minepkg.testutils.TestUtils"],
-    "client": [ "io.minepkg.testutils.TestUtilsClient"]
-  },
-  "depends": {
-    "fabricloader": "*",
-    "fabric": "*",
-    "minecraft": "~1.19.0",
-    "java": ">=17"
-  },
-  "suggests": {
-    "minepkg-companion": "*"
-  }
+	"name": "test-utils",
+	"description": "Makes mod testing easier. Currently lets you control time and weather without the fuzz.",
+	"authors": ["Filip Weiss"],
+	"contact": {
+		"homepage": "https://minepkg.io/projects/test-utils",
+		"sources": "https://github.com/minepkg/test-utils"
+	},
+	"license": "MIT",
+	"icon": "assets/testutils/textures/item/rulebook.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": ["io.minepkg.testutils.TestUtils"],
+		"client": ["io.minepkg.testutils.TestUtilsClient"]
+	},
+	"depends": {
+		"fabricloader": "*",
+		"fabric": "*",
+		"minecraft": "~1.20.0",
+		"java": ">=17"
+	},
+	"suggests": {
+		"minepkg-companion": "*"
+	}
 }

@@ -10,6 +10,7 @@ import net.minecraft.item.ItemGroups;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -71,7 +72,7 @@ public class TestUtils implements ModInitializer {
 
       // Execute on the main thread
       server.execute(() -> {
-        ServerWorld world = (ServerWorld) player.world;
+        ServerWorld world = (ServerWorld) player.getServerWorld();
         // set the time
         world.setTimeOfDay(wantedTime);
       });
@@ -80,7 +81,7 @@ public class TestUtils implements ModInitializer {
     // client wants to set the weather
     ServerPlayNetworking.registerGlobalReceiver(SET_WEATHER_PACKET_ID, (server, player, handler, buf, responseSender) -> {
       short weather = buf.getShort(0);
-      ServerWorld world = (ServerWorld) player.world;
+      ServerWorld world = (ServerWorld) player.getServerWorld();
 
       // Execute on the main thread
       server.execute(() -> {
@@ -96,7 +97,7 @@ public class TestUtils implements ModInitializer {
     ServerPlayNetworking.registerGlobalReceiver(SET_RULE_PACKET_ID, (server, player, handler, buf, sender) -> {
       short ruleID = buf.getShort(0);
       boolean value = buf.getBoolean(2);
-      ServerWorld world = (ServerWorld) player.world;
+      ServerWorld world = (ServerWorld) player.getServerWorld();
 
       // Execute on the main thread
       server.execute(() -> {
@@ -136,7 +137,7 @@ public class TestUtils implements ModInitializer {
   }
 
   public void sendWeatherRule(ServerPlayerEntity player) {
-    ServerWorld world = (ServerWorld)player.world;
+    ServerWorld world = (ServerWorld) player.getServerWorld();
     boolean doWeatherCycle = world.getGameRules().getBoolean(GameRules.DO_WEATHER_CYCLE);
     PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
     packet.writeBoolean(doWeatherCycle);
