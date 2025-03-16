@@ -2,7 +2,6 @@ package io.minepkg.testutils;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
 
 public class TestUtilsClient implements ClientModInitializer {
 
@@ -11,13 +10,13 @@ public class TestUtilsClient implements ClientModInitializer {
 
   @Override
   public void onInitializeClient() {
-    ClientPlayNetworking.registerGlobalReceiver(TestUtils.OPEN_BOOK_PACKET_ID, (client, clientPlayNetworkHandler, packet, packetSender) -> {
+    ClientPlayNetworking.registerGlobalReceiver(TestUtils.OPEN_BOOK_S2C, (client, clientPlayNetworkHandler, packet, packetSender) -> {
       client.execute(() -> {
         client.setScreen(new RuleBookScreen(new RuleBookGUI(client.world, client.player)));
       });
     });
 
-    ClientPlayNetworking.registerGlobalReceiver(TestUtils.WEATHER_GAMERULE_SYNC, (client, clientPlayNetworkHandler, packet, packetSender) -> {
+    ClientPlayNetworking.registerGlobalReceiver(TestUtils.WEATHER_GAMERULE_SYNC_S2C, (client, clientPlayNetworkHandler, packet, packetSender) -> {
       boolean doWeatherCycle = packet.readBoolean();
 
       client.execute(() -> {
