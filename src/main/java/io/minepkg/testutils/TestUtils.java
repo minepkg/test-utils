@@ -24,9 +24,11 @@ public class TestUtils implements ModInitializer {
   public static final String MOD_ID = "testutils"; // Note: currently different from fabric.mod.json id
   public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
+  // server -> client
+  public static final Identifier OPEN_BOOK_PACKET_ID = TestUtils.id("open_book");
   public static final Identifier WEATHER_GAMERULE_SYNC = TestUtils.id("weather_sync");
-  public static final Identifier WEATHER_GAMERULE_SYNC_REQUEST = TestUtils.id("weather_sync_request");
 
+  // client -> server
   public static final Identifier SET_TIME_PACKET_ID = TestUtils.id("set_time");
   public static final Identifier SET_RULE_PACKET_ID = TestUtils.id("set_rule");
   public static final Identifier SET_WEATHER_PACKET_ID = TestUtils.id("set_weather");
@@ -59,10 +61,6 @@ public class TestUtils implements ModInitializer {
     // sync weather rule on player connect
     ServerPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
       sendWeatherRule(handler.player);
-    });
-
-    ServerPlayNetworking.registerGlobalReceiver(WEATHER_GAMERULE_SYNC_REQUEST, (server, player, handler, buf, sender) -> {
-      sendWeatherRule(player);
     });
 
     // client wants to set the time
@@ -126,7 +124,12 @@ public class TestUtils implements ModInitializer {
     });
   }
 
-  public void broadcastWeatherRuleChange(MinecraftServer server, boolean value) {
+  public static void sendOpenBookPacket(ServerPlayerEntity player) {
+    PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+    ServerPlayNetworking.send(player, OPEN_BOOK_PACKET_ID, packet);
+  }
+
+  public static void broadcastWeatherRuleChange(MinecraftServer server, boolean value) {
     PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
     packet.writeBoolean(value);
 
@@ -136,7 +139,7 @@ public class TestUtils implements ModInitializer {
     });
   }
 
-  public void sendWeatherRule(ServerPlayerEntity player) {
+  public static void sendWeatherRule(ServerPlayerEntity player) {
     ServerWorld world = player.getServerWorld();
     boolean doWeatherCycle = world.getGameRules().getBoolean(GameRules.DO_WEATHER_CYCLE);
     PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
