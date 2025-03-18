@@ -4,20 +4,20 @@
 lockfileVersion = 1
 
 [fabric]
-  minecraft = "1.20"
+  minecraft = "1.20.4"
   fabricLoader = "0.16.10"
-  mapping = "1.20+build.1"
+  mapping = "1.20.4+build.3"
 
 [dependencies]
 
   [dependencies.fabric]
     name = "fabric"
-    version = "0.92.3+1.20.1.mpkg.1"
+    version = "0.97.2+1.20.4.mpkg.1"
     versionName = ""
     type = "mod"
     ipfsHash = ""
-    Sha256 = "57e606b4afd5f8d6faefc78432fa0e813d3d2e59365cdb0e832ee2bbb6eef59a"
-    url = "https://api.preview.minepkg.io/v1/releases/fabric/fabric@0.92.3+1.20.1.mpkg.1/download"
+    Sha256 = "3e820841b9f5d3d898bcb0f0abb9bfc15fb608bf07c74292ea3dd1b98d36460a"
+    url = "https://api.preview.minepkg.io/v1/releases/fabric/fabric@0.97.2+1.20.4.mpkg.1/download"
     provider = "minepkg"
     dependent = ""
 
