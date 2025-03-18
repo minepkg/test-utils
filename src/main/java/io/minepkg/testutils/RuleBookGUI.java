@@ -21,7 +21,6 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
@@ -184,7 +183,7 @@ public class RuleBookGUI extends LightweightGuiDescription {
     timeSlider.setValue(timeOfDay);
     envBox.setTimeOfDay(timeOfDay);
 
-    btnLockTime.setToggle(!w.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE));
+    btnLockTime.setToggle(!TestUtilsClient.doDaylightCycle);
     btnLockWeather.setToggle(!TestUtilsClient.doWeatherCycle);
 
     timeSlider.setValueChangeListener((time) -> {
@@ -219,7 +218,7 @@ public class RuleBookGUI extends LightweightGuiDescription {
     this.timeSlider.setValue((int)time);
 
     // update if someone else changed the game rules
-    btnLockTime.setToggle(!world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE));
+    btnLockTime.setToggle(!TestUtilsClient.doDaylightCycle);
     btnLockWeather.setToggle(!TestUtilsClient.doWeatherCycle);
   }
 

@@ -1,7 +1,7 @@
 package io.minepkg.testutils;
 
+import io.minepkg.testutils.network.s2c.GameruleSyncPayload;
 import io.minepkg.testutils.network.s2c.OpenBookPayload;
-import io.minepkg.testutils.network.s2c.WeatherGameruleSyncPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -9,7 +9,8 @@ import net.minecraft.client.MinecraftClient;
 
 public class TestUtilsClient implements ClientModInitializer {
 
-  // used by GUI instead of native game rule because we can not change them
+  // used to sync the gamerules to the GUI
+  public static boolean doDaylightCycle = true;
   public static boolean doWeatherCycle = true;
 
   @Override
@@ -23,12 +24,11 @@ public class TestUtilsClient implements ClientModInitializer {
       });
     });
 
-    PayloadTypeRegistry.playS2C().register(WeatherGameruleSyncPayload.ID, WeatherGameruleSyncPayload.CODEC);
-    ClientPlayNetworking.registerGlobalReceiver(WeatherGameruleSyncPayload.ID, (payload, context) -> {
+    PayloadTypeRegistry.playS2C().register(GameruleSyncPayload.ID, GameruleSyncPayload.CODEC);
+    ClientPlayNetworking.registerGlobalReceiver(GameruleSyncPayload.ID, (payload, context) -> {
       context.client().execute(() -> {
+        TestUtilsClient.doDaylightCycle = payload.doDaylightCycle();
         TestUtilsClient.doWeatherCycle = payload.doWeatherCycle();
-        // Does not work because .. minecraft
-        // ((GameRules.BooleanRule)client.world.getGameRules().get(GameRules.DO_WEATHER_CYCLE)).set(doWeatherCycle, (MinecraftServer)null);
       });
     });
   }
