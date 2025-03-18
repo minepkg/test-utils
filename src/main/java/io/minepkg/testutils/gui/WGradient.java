@@ -5,7 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.Color.RGB;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.DrawContext; // Import DrawContext!
+import net.minecraft.client.gui.DrawContext;
 
 public class WGradient extends WWidget {
 
