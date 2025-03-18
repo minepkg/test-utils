@@ -5,7 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.Color.RGB;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext; // Import DrawContext!
 
 public class WGradient extends WWidget {
 
@@ -23,11 +23,11 @@ public class WGradient extends WWidget {
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+  public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) { // Changed to DrawContext!
     for (int yPos = 0; yPos < getHeight(); yPos++) {
       double percent = yPos / (double)getHeight();
       RGB color = WGradient.interpolateColors(colorFrom, colorTo, percent);
-      ScreenDrawing.coloredRect(matrices, x, y+yPos, getWidth(), 1, color.toRgb());
+      ScreenDrawing.coloredRect(context, x, y+yPos, getWidth(), 1, color.toRgb()); // Use 'context'
     }
   }
 

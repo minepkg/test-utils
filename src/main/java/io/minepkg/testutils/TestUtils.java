@@ -10,6 +10,7 @@ import net.minecraft.item.ItemGroups;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -23,12 +24,12 @@ public class TestUtils implements ModInitializer {
   public static final String MOD_ID = "testutils"; // Note: currently different from fabric.mod.json id
   public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-  public static final Identifier WEATHER_GAMERULE_SYNC = TestUtils.id("weather_sync");
-  public static final Identifier WEATHER_GAMERULE_SYNC_REQUEST = TestUtils.id("weather_sync_request");
+  public static final Identifier OPEN_BOOK_S2C = TestUtils.id("open_book");
+  public static final Identifier WEATHER_GAMERULE_SYNC_S2C = TestUtils.id("weather_sync");
 
-  public static final Identifier SET_TIME_PACKET_ID = TestUtils.id("set_time");
-  public static final Identifier SET_RULE_PACKET_ID = TestUtils.id("set_rule");
-  public static final Identifier SET_WEATHER_PACKET_ID = TestUtils.id("set_weather");
+  public static final Identifier SET_TIME_C2S = TestUtils.id("set_time");
+  public static final Identifier SET_RULE_C2S = TestUtils.id("set_rule");
+  public static final Identifier SET_WEATHER_C2S = TestUtils.id("set_weather");
 
   public static final short DO_DAYLIGHT_CYCLE_RULE = 1;
   public static final short DO_WEATHER_CYCLE_RULE = 2;
@@ -60,27 +61,23 @@ public class TestUtils implements ModInitializer {
       sendWeatherRule(handler.player);
     });
 
-    ServerPlayNetworking.registerGlobalReceiver(WEATHER_GAMERULE_SYNC_REQUEST, (server, player, handler, buf, sender) -> {
-      sendWeatherRule(player);
-    });
-
     // client wants to set the time
-    ServerPlayNetworking.registerGlobalReceiver(SET_TIME_PACKET_ID, (server, player, handler, buf, responseSender) -> {
+    ServerPlayNetworking.registerGlobalReceiver(SET_TIME_C2S, (server, player, handler, buf, responseSender) -> {
       // make sure its not over 24000
       long wantedTime = buf.getLong(0) % 24000;
 
       // Execute on the main thread
       server.execute(() -> {
-        ServerWorld world = (ServerWorld) player.world;
+        ServerWorld world = player.getServerWorld();
         // set the time
         world.setTimeOfDay(wantedTime);
       });
     });
 
     // client wants to set the weather
-    ServerPlayNetworking.registerGlobalReceiver(SET_WEATHER_PACKET_ID, (server, player, handler, buf, responseSender) -> {
+    ServerPlayNetworking.registerGlobalReceiver(SET_WEATHER_C2S, (server, player, handler, buf, responseSender) -> {
       short weather = buf.getShort(0);
-      ServerWorld world = (ServerWorld) player.world;
+      ServerWorld world = player.getServerWorld();
 
       // Execute on the main thread
       server.execute(() -> {
@@ -93,10 +90,10 @@ public class TestUtils implements ModInitializer {
     });
 
     // client wants to set a rule (eg. freeze the time)
-    ServerPlayNetworking.registerGlobalReceiver(SET_RULE_PACKET_ID, (server, player, handler, buf, sender) -> {
+    ServerPlayNetworking.registerGlobalReceiver(SET_RULE_C2S, (server, player, handler, buf, sender) -> {
       short ruleID = buf.getShort(0);
       boolean value = buf.getBoolean(2);
-      ServerWorld world = (ServerWorld) player.world;
+      ServerWorld world = player.getServerWorld();
 
       // Execute on the main thread
       server.execute(() -> {
@@ -125,21 +122,26 @@ public class TestUtils implements ModInitializer {
     });
   }
 
-  public void broadcastWeatherRuleChange(MinecraftServer server, boolean value) {
+  public static void sendOpenBookPacket(ServerPlayerEntity player) {
+    PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+    ServerPlayNetworking.send(player, OPEN_BOOK_S2C, packet);
+  }
+
+  public static void broadcastWeatherRuleChange(MinecraftServer server, boolean value) {
     PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
     packet.writeBoolean(value);
 
     // Notify each player on the server about the weather gamerule update.
     server.getPlayerManager().getPlayerList().forEach(player -> {
-      ServerPlayNetworking.send(player, WEATHER_GAMERULE_SYNC, packet);
+      ServerPlayNetworking.send(player, WEATHER_GAMERULE_SYNC_S2C, packet);
     });
   }
 
-  public void sendWeatherRule(ServerPlayerEntity player) {
-    ServerWorld world = (ServerWorld)player.world;
+  public static void sendWeatherRule(ServerPlayerEntity player) {
+    ServerWorld world = player.getServerWorld();
     boolean doWeatherCycle = world.getGameRules().getBoolean(GameRules.DO_WEATHER_CYCLE);
     PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
     packet.writeBoolean(doWeatherCycle);
-    ServerPlayNetworking.send(player, WEATHER_GAMERULE_SYNC, packet);
+    ServerPlayNetworking.send(player, WEATHER_GAMERULE_SYNC_S2C, packet);
   }
 }

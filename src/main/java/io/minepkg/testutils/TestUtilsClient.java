@@ -10,7 +10,13 @@ public class TestUtilsClient implements ClientModInitializer {
 
   @Override
   public void onInitializeClient() {
-    ClientPlayNetworking.registerGlobalReceiver(TestUtils.WEATHER_GAMERULE_SYNC, (client, clientPlayNetworkHandler, packet, packetSender) -> {
+    ClientPlayNetworking.registerGlobalReceiver(TestUtils.OPEN_BOOK_S2C, (client, clientPlayNetworkHandler, packet, packetSender) -> {
+      client.execute(() -> {
+        client.setScreen(new RuleBookScreen(new RuleBookGUI(client.world, client.player)));
+      });
+    });
+
+    ClientPlayNetworking.registerGlobalReceiver(TestUtils.WEATHER_GAMERULE_SYNC_S2C, (client, clientPlayNetworkHandler, packet, packetSender) -> {
       boolean doWeatherCycle = packet.readBoolean();
 
       client.execute(() -> {

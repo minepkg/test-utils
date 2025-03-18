@@ -3,8 +3,7 @@ package io.minepkg.testutils.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.WButton;
-import io.minepkg.testutils.TestUtils;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 
 public class WSpriteButton extends WButton {
@@ -29,21 +28,21 @@ public class WSpriteButton extends WButton {
   }
 
   @Override
-  public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+  public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) { // Changed to DrawContext!
     boolean hovered = (mouseX>=0 && mouseY>=0 && mouseX<getWidth() && mouseY<getHeight());
     int state = 1; //1=regular. 2=hovered. 0=disabled.
     if (!isEnabled()) state = 0;
     else if (hovered) state = 2;
 
     RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-    ScreenDrawing.coloredRect(matrices, x, y, getWidth(), getHeight(), 0xFF_7b7b7b);
-    ScreenDrawing.coloredRect(matrices, x+1, y+1, getWidth()-2, getHeight()-2, state == 2 ? 0xFF_ababab : 0xFF_b7b7b7);
+    ScreenDrawing.coloredRect(context, x, y, getWidth(), getHeight(), 0xFF_7b7b7b); // Use 'context'
+    ScreenDrawing.coloredRect(context, x+1, y+1, getWidth()-2, getHeight()-2, state == 2 ? 0xFF_ababab : 0xFF_b7b7b7); // Use 'context'
 
     int sw = getSpriteWidth();
     int sh = getSpriteHeight();
     int xOffset = (getWidth() - sw) / 2;
     int yOffset = (getHeight() - sh) / 2;
-    ScreenDrawing.texturedRect(matrices,
+    ScreenDrawing.texturedRect(context, // Use 'context'
       x + xOffset,
       y + yOffset,
       sw,
