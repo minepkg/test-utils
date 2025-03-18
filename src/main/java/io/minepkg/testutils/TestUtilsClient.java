@@ -1,7 +1,11 @@
 package io.minepkg.testutils;
 
+import io.minepkg.testutils.network.s2c.OpenBookPayload;
+import io.minepkg.testutils.network.s2c.WeatherGameruleSyncPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.minecraft.client.MinecraftClient;
 
 public class TestUtilsClient implements ClientModInitializer {
 
@@ -10,17 +14,19 @@ public class TestUtilsClient implements ClientModInitializer {
 
   @Override
   public void onInitializeClient() {
-    ClientPlayNetworking.registerGlobalReceiver(TestUtils.OPEN_BOOK_S2C, (client, clientPlayNetworkHandler, packet, packetSender) -> {
+    PayloadTypeRegistry.playS2C().register(OpenBookPayload.ID, OpenBookPayload.CODEC);
+    ClientPlayNetworking.registerGlobalReceiver(OpenBookPayload.ID, (payload, context) -> {
+      MinecraftClient client = context.client();
+
       client.execute(() -> {
         client.setScreen(new RuleBookScreen(new RuleBookGUI(client.world, client.player)));
       });
     });
 
-    ClientPlayNetworking.registerGlobalReceiver(TestUtils.WEATHER_GAMERULE_SYNC_S2C, (client, clientPlayNetworkHandler, packet, packetSender) -> {
-      boolean doWeatherCycle = packet.readBoolean();
-
-      client.execute(() -> {
-        TestUtilsClient.doWeatherCycle = doWeatherCycle;
+    PayloadTypeRegistry.playS2C().register(WeatherGameruleSyncPayload.ID, WeatherGameruleSyncPayload.CODEC);
+    ClientPlayNetworking.registerGlobalReceiver(WeatherGameruleSyncPayload.ID, (payload, context) -> {
+      context.client().execute(() -> {
+        TestUtilsClient.doWeatherCycle = payload.doWeatherCycle();
         // Does not work because .. minecraft
         // ((GameRules.BooleanRule)client.world.getGameRules().get(GameRules.DO_WEATHER_CYCLE)).set(doWeatherCycle, (MinecraftServer)null);
       });

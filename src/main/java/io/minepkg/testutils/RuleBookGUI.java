@@ -8,11 +8,15 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.Color.RGB;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
-import io.minepkg.testutils.gui.*;
-import io.netty.buffer.Unpooled;
+import io.minepkg.testutils.gui.WClickableLabel;
+import io.minepkg.testutils.gui.WGradient;
+import io.minepkg.testutils.gui.WSpriteButton;
+import io.minepkg.testutils.gui.WUsableClippedPanel;
+import io.minepkg.testutils.network.c2s.SetRulePayload;
+import io.minepkg.testutils.network.c2s.SetTimePayload;
+import io.minepkg.testutils.network.c2s.SetWeatherPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -221,10 +225,8 @@ public class RuleBookGUI extends LightweightGuiDescription {
 
   private void setTime(long timeOfDay) {
     preventTickUpdates = 1000;
-    PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-    passedData.writeLong(timeOfDay);
     // Send packet to server to change the time
-    ClientPlayNetworking.send(TestUtils.SET_TIME_C2S, passedData);
+    ClientPlayNetworking.send(new SetTimePayload(timeOfDay));
     timeSlider.setValue((int)timeOfDay, false);
     envBox.setTimeOfDay(timeOfDay);
     // TODO: wait for response instead
@@ -233,20 +235,14 @@ public class RuleBookGUI extends LightweightGuiDescription {
 
   private void setRule(short id, boolean value) {
     preventTickUpdates += 1;
-    PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-    // eg. 0 is day cycle
-    passedData.writeShort(id);
-    // enabling the button locks the weather
-    passedData.writeBoolean(value);
-    ClientPlayNetworking.send(TestUtils.SET_RULE_C2S, passedData);
+    // e.g. id 0 is day cycle, enabling the button locks the weather
+    ClientPlayNetworking.send(new SetRulePayload(id, value));
     preventTickUpdates = 20;
   }
 
   private void setWeather(short weather) {
     preventTickUpdates += 1;
-    PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-    passedData.writeShort(weather);
-    ClientPlayNetworking.send(TestUtils.SET_WEATHER_C2S, passedData);
+    ClientPlayNetworking.send(new SetWeatherPayload(weather));
     preventTickUpdates = 30;
   }
 }
