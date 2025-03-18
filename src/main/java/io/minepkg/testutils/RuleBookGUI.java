@@ -26,16 +26,16 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
 class WEnvMonitor extends WUsableClippedPanel {
-  private static final Identifier SNOW_GRASS = new Identifier("minecraft:textures/block/grass_block_snow.png");
-  private static final Identifier NORMAL_GRASS = new Identifier("minecraft:textures/block/grass_block_side.png");
+  private static final Identifier SNOW_GRASS = Identifier.ofVanilla("textures/block/grass_block_snow.png");
+  private static final Identifier NORMAL_GRASS = Identifier.ofVanilla("textures/block/grass_block_side.png");
 
   private boolean canSnow = false;
   WSprite sun = new WSprite(TestUtils.id("sun_env.png"));
   WSprite mun = new WSprite(TestUtils.id("mun_env.png"));
   WGradient bg = new WGradient();
   WTiledSprite grass = new WTiledSprite(12, 12, NORMAL_GRASS);
-  WTiledSprite rain = new WTiledSprite(24, 120, new Identifier("minecraft:textures/environment/rain.png"));
-  WTiledSprite snow = new WTiledSprite(24, 120, new Identifier("minecraft:textures/environment/snow.png"));
+  WTiledSprite rain = new WTiledSprite(24, 120, Identifier.ofVanilla("textures/environment/rain.png"));
+  WTiledSprite snow = new WTiledSprite(24, 120, Identifier.ofVanilla("textures/environment/snow.png"));
 
   RGB topDayColor = new RGB(0xFF_8cb6fc);
   RGB bottomDayColor = new RGB(0xFF_b5d1ff);
