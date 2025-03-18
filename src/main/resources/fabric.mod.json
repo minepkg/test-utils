@@ -20,8 +20,8 @@
 	"depends": {
 		"fabricloader": "*",
 		"fabric": "*",
-		"minecraft": "~1.20.0",
-		"java": ">=17"
+		"minecraft": "${minecraft_version_range}",
+		"java": ">=${java_version}"
 	},
 	"suggests": {
 		"minepkg-companion": "*"

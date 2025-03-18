@@ -3,11 +3,12 @@ plugins {
 	id 'maven-publish'
 }
 
-targetCompatibility = sourceCompatibility = JavaVersion.VERSION_17
-
-archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
 
 repositories {
 	maven {
@@ -28,21 +29,25 @@ dependencies {
 }
 
 processResources {
-	inputs.property "version", project.version
+	def toExpand = [
+		"version": project.version,
+		"java_version": project.java_version,
+		"minecraft_version_range": project.minecraft_version_range,
+	]
+
+	inputs.properties toExpand
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+		expand toExpand
 	}
 }
 
 tasks.withType(JavaCompile) {
-	options.release = 17
+	it.options.release = project.java_version as Integer
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
 java {
+	targetCompatibility = sourceCompatibility = JavaVersion.toVersion(project.java_version as Integer)
 	withSourcesJar()
 }
 
